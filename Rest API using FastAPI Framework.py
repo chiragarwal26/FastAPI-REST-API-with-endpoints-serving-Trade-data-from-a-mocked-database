@@ -1,4 +1,4 @@
-# Import the FastAPI and pydantic libraries.
+# Import the FastAPI and pydantic libraries as prerequistics
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -13,7 +13,7 @@ class Trade(BaseModel):
     trade_details: dict
 
 
-# Creating a FastAPI app.
+# Creating a FastAPI app.  (creating an object for API)
 app = FastAPI()
 
 
@@ -30,9 +30,11 @@ def get_trades(
     page: int = 1,
     size: int = 10,
 ):
+    
     # Get all trades from the database.
     trades = get_all_trades()
 
+    
     # Filter the trades based on the query parameters.
     if search:
         trades = [trade for trade in trades if search.lower() in trade.lower()]
@@ -49,11 +51,14 @@ def get_trades(
     if trade_type:
         trades = [trade for trade in trades if trade.trade_details.buySellIndicator == trade_type]
 
+        
     # Paginate the trades.
     trades = trades.paginate(page=page, size=size)
 
+    
     # Return the trades.
     return trades
+
 
 
 # Defining a `get_trade` endpoint that returns a single trade by its ID.
@@ -62,8 +67,10 @@ def get_trade(trade_id: str):
     # Get the trade from the database.
     trade = get_trade_by_id(trade_id)
 
+    
     # Return the trade.
     return trade
+
 
 
 # Defining a function to get all trades from the database.
@@ -91,6 +98,7 @@ def get_all_trades():
 
 # Defining a function to get a single trade by its ID from the database.
 def get_trade_by_id(trade_id: str):
+    
     # Mock database interaction layer here
     return get_all_trades()[0]
 
@@ -98,3 +106,19 @@ def get_trade_by_id(trade_id: str):
 # Running the app in debug mode.
 if __name__ == "__main__":
     app.run(debug=True)
+    
+    
+"""The code provided is a functional implementation of the API using FastAPI.
+
+It includes endpoints to retrieve a list of trades, retrieve a single trade by ID,
+search for trades, and filter trades based on optional query parameters. Pagination and sorting are also supported.
+
+To run the API, save the code in a Python file (e.g., api.py) and execute it using the Python interpreter or a command line tool.
+Ensure that you have the FastAPI and Uvicorn packages installed. You can install them using pip:"""
+
+# pip command for installion of fastapi and uvicorn (run this command in cmd)
+pip install fastapi uvicorn
+
+# Now, We can run the API using the following command:
+uvicorn api:app --reload      # The API will be accessible at " http://localhost:8000 "
+
